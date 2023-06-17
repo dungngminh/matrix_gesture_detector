@@ -3,7 +3,6 @@ library matrix_gesture_detector;
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 typedef MatrixGestureDetectorCallback = void Function(
     Matrix4 matrix,
@@ -61,11 +60,14 @@ class MatrixGestureDetector extends StatefulWidget {
   /// When set, it will be used for computing a "fixed" focal point
   /// aligned relative to the size of this widget.
   final Alignment? focalPointAlignment;
-    
+
   final VoidCallback onScaleStart;
+  
   final VoidCallback onScaleEnd;
 
-  const MatrixGestureDetector({
+  final Matrix4 initialMatrix;
+
+  MatrixGestureDetector({
     Key? key,
     required this.onMatrixUpdate,
     required this.child,
@@ -77,7 +79,9 @@ class MatrixGestureDetector extends StatefulWidget {
     this.behavior = HitTestBehavior.deferToChild,
     required this.onScaleStart,
     required this.onScaleEnd,
-  })  : super(key: key);
+    Matrix4? initialMatrix,
+  })  : this.initialMatrix = initialMatrix ?? Matrix4.identity(),
+        super(key: key);
 
   @override
   _MatrixGestureDetectorState createState() => _MatrixGestureDetectorState();
@@ -116,7 +120,13 @@ class _MatrixGestureDetectorState extends State<MatrixGestureDetector> {
   Matrix4 translationDeltaMatrix = Matrix4.identity();
   Matrix4 scaleDeltaMatrix = Matrix4.identity();
   Matrix4 rotationDeltaMatrix = Matrix4.identity();
-  Matrix4 matrix = Matrix4.identity();
+  late Matrix4 matrix;
+
+  @override
+  void initState() {
+    super.initState();
+    matrix = widget.initialMatrix;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,19 +156,20 @@ class _MatrixGestureDetectorState extends State<MatrixGestureDetector> {
 
   void onScaleStart(ScaleStartDetails details) {
     widget.onScaleStart();
-      
+
     translationUpdater.value = details.focalPoint;
     scaleUpdater.value = 1.0;
     rotationUpdater.value = 0.0;
   }
-    
+
   void onScaleEnd(ScaleEndDetails details) {
     widget.onScaleEnd();
   }
 
   void onScaleUpdate(ScaleUpdateDetails details) {
-    widget.onScaleStart(); // Why added onScaleUpdate? refer: https://github.com/pskink/matrix_gesture_detector/issues/5#issuecomment-553748004
-      
+    widget
+        .onScaleStart(); // Why added onScaleUpdate? refer: https://github.com/pskink/matrix_gesture_detector/issues/5#issuecomment-553748004
+
     translationDeltaMatrix = Matrix4.identity();
     scaleDeltaMatrix = Matrix4.identity();
     rotationDeltaMatrix = Matrix4.identity();
@@ -171,9 +182,9 @@ class _MatrixGestureDetectorState extends State<MatrixGestureDetector> {
     }
 
     final focalPointAlignment = widget.focalPointAlignment;
-    final focalPoint = focalPointAlignment == null ?
-      details.localFocalPoint :
-      focalPointAlignment.alongSize(context.size!);
+    final focalPoint = focalPointAlignment == null
+        ? details.localFocalPoint
+        : focalPointAlignment.alongSize(context.size!);
 
     // handle matrix scaling
     if (widget.shouldScale && details.scale != 1.0) {

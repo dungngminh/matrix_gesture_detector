@@ -14,6 +14,8 @@ class TransformDemo extends StatelessWidget {
         onMatrixUpdate: (m, tm, sm, rm) {
           notifier.value = m;
         },
+        onScaleEnd: () {},
+        onScaleStart: () {},
         child: AnimatedBuilder(
           animation: notifier,
           builder: (ctx, child) {
@@ -42,7 +44,7 @@ class TransformDemo extends StatelessWidget {
                     alignment: Alignment(0, -0.5),
                     child: Text(
                       'use your two fingers to translate / rotate / scale ...',
-                      style: Theme.of(context).textTheme.display2,
+                      style: Theme.of(context).textTheme.headline3,
                       textAlign: TextAlign.center,
                     ),
                   ),

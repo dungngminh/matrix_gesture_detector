@@ -123,6 +123,8 @@ class TransformDemo4State extends State<TransformDemo4>
               shouldRotate: shouldRotate!,
               focalPointAlignment: focalPoint!,
               clipChild: false,
+              onScaleEnd: () {},
+              onScaleStart: () {},
               child: CustomPaint(
                 foregroundPainter: FocalPointPainter(focalPointAnimation),
                 child: AnimatedBuilder(
@@ -168,7 +170,7 @@ class TransformDemo4State extends State<TransformDemo4>
                   alignment: Alignment(0, -0.5),
                   child: Text(
                     body.label,
-                    style: Theme.of(context).textTheme.display2,
+                    style: Theme.of(context).textTheme.headline3,
                     textAlign: TextAlign.center,
                   ),
                 ),

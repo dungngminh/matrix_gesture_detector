@@ -44,10 +44,12 @@ class _TransformDemo3State extends State<TransformDemo3> {
               var angle = MatrixGestureDetector.decomposeToValues(m).rotation;
               double t = (1 - cos(2 * angle)) / 2;
 
-              radius = radiusTween.transform(t);
+              radius = radiusTween.transform(t) as double;
               color = colorTween.transform(t);
               notifier.value++;
             },
+            onScaleEnd: () {},
+            onScaleStart: () {},
             child: Container(
               width: double.infinity,
               height: double.infinity,
@@ -73,7 +75,7 @@ class _TransformDemo3State extends State<TransformDemo3> {
                         child: Text(
                           'you can move & scale me (and "rotate" too)',
                           textAlign: TextAlign.center,
-                          style: Theme.of(ctx).textTheme.display1!.apply(
+                          style: Theme.of(ctx).textTheme.headline4!.apply(
                                 color: Colors.white,
                               ),
                         ),

@@ -41,6 +41,8 @@ class _TransformDemo2State extends State<TransformDemo2> {
               boxer.clamp(matrix!);
               notifier.value = matrix;
             },
+            onScaleEnd: () {  },
+            onScaleStart: () {  },
             child: Container(
               width: double.infinity,
               height: double.infinity,
@@ -64,7 +66,7 @@ class _TransformDemo2State extends State<TransformDemo2> {
                         child: Text(
                           'you can move & scale me',
                           textAlign: TextAlign.center,
-                          style: Theme.of(ctx).textTheme.display1,
+                          style: Theme.of(ctx).textTheme.displayLarge,
                         ),
                       ),
                     ),
